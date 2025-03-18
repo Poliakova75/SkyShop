@@ -4,8 +4,9 @@ public class DiscountedProduct extends Product {
     private final int basePrice;
     private final int discountPercentage;
 
-    public DiscountedProduct(String name, int basePrice, int discountPercentage) {
-        super(name);
+
+    public DiscountedProduct(String name, String description, int basePrice, int discountPercentage) {
+        super(name, description);
         this.basePrice = basePrice;
         this.discountPercentage = discountPercentage;
     }
@@ -16,7 +17,7 @@ public class DiscountedProduct extends Product {
         return basePrice - discountAmount;
     }
     public String toString (){
-        return getName() + ": " + getPrice() + " (" + discountPercentage + ")";
+        return getSearchTerm();
     }
 
     @Override
