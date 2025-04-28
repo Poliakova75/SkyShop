@@ -3,68 +3,54 @@ import org.skypro.skyshop.articles.SearchEngine;
 import org.skypro.skyshop.articles.Searchable;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.*;
+import java.util.Arrays;
+import java.util.List;
 public class App {
     public static void main(String[] args) {
-        Searchable[] items = new Searchable[]{
-                new SimpleProduct("Яблоко", "Яблоки Red Cheaf", 50),
-                new SimpleProduct("Виноград", "Красный виноград сорта Гренаш", 60),
-                new SimpleProduct("Банан", "Бананы по фиксированной цене", 99),
-                new SimpleProduct("Груша", "груша Конференц", 45),
-        };
-        SearchEngine searchEngine = new SearchEngine(items);
-        // Поиск существующего объекта
+
+        Product apple = new DiscountedProduct("Яблоко", "Яблоки Red Cheaf", 50, 5);
+        Product banana = new FixPriceProduct("Банан", "Бананы по фиксированной цене", 99);
+        Product pear = new SimpleProduct("Груша", "груша Конференц", 45);
+
+        List<Searchable> productList = Arrays.asList(apple, banana, pear);
+        SearchEngine searchEngine = new SearchEngine(productList);
         try {
-            String searchTerm = "Яблоко";
-            Searchable bestMatch = searchEngine.findBestMatch(searchTerm);
-            System.out.println("Лучший найденный элемент: " + bestMatch.getSearchTerm());
-        } catch (BestResultNotFound e) {
-            System.err.println(e.getMessage());
-        }
-        // Поиск несуществующего объекта
-        try {
-            String searchTerm = "Киви";
-            Searchable bestMatch = searchEngine.findBestMatch(searchTerm);
-            System.out.println("Лучший найденный элемент: " + bestMatch.getSearchTerm());
-        } catch (BestResultNotFound e) {
-            System.err.println("Ошибка: " + e.getMessage());
-        }
-        getProductBasket();
-    }
-    private static void getProductBasket() {
-        ProductBasket basket = new ProductBasket();
-        addProducts(basket);
-    }
-    private static void addProducts(ProductBasket basket) {
-        try {
-            // Продукт с корректными данными
-            DiscountedProduct apple = new DiscountedProduct("Яблоко", "Яблоки Red Cheaf", 50, 5);
+            List<Searchable> matches = searchEngine.findAllMatches("Груша");
+            System.out.println("Найденные товары: " + matches.size());
+
+            ProductBasket basket = new ProductBasket();
             basket.addProduct(apple);
-            // Продукт с неправильной ценой (отрицательная цена)
-            FixPriceProduct banana = new FixPriceProduct("Банан", "Бананы по фиксированной цене", 99);
             basket.addProduct(banana);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Ошибка при добавлении продукта: " + e.getMessage());
-        }
-        try {
-            // Другие продукты
-            SimpleProduct orange = new SimpleProduct("Апельсин", "Красные апельсины", 40);
-            basket.addProduct(orange);
-            // Продукт с неправильным значением (отрицательная цена)
-            SimpleProduct grapes = new SimpleProduct("Виноград", "Красный виноград сорта Гренаш", -60);
-            basket.addProduct(grapes);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Ошибка при добавлении продукта: " + e.getMessage());
-        }
-        try {
-            SimpleProduct pear = new SimpleProduct("Груша", "груша Конференц", 45);
             basket.addProduct(pear);
-            SimpleProduct pineapple = new SimpleProduct("Ананас", "", 90);
-            basket.addProduct(pineapple);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Ошибка при добавлении продукта: " + e.getMessage());
+            // Удаляем существующий продукт
+            removeProductFromBasket(basket, "Яблоко");
+            // Выводим содержимое корзины
+            printBasketContents(basket);
+            // Удаляем несуществующий продукт
+            removeProductFromBasket(basket, "Киви");
+
+            printBasketContents(basket);
+        } catch (BestResultNotFound e) {
+            System.err.println("Ошибка поиска: " + e.getMessage());
         }
+    }
+    private static void removeProductFromBasket(ProductBasket basket, String productName) {
+        List<Product> removedProducts = basket.removeProductsByName(productName);
+        System.out.println("Удаленные продукты:");
+        if (removedProducts.isEmpty()) {
+            System.out.println("Список пуст: " + productName);
+        } else {
+            for (Product removedProduct : removedProducts) {
+                System.out.println(removedProduct.getName());
+            }
+        }
+    }
+    private static void printBasketContents(ProductBasket basket) {
+        System.out.println("Содержимое корзины:");
+        basket.printBasket();
     }
 }
+
 
 
 

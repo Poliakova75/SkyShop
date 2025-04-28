@@ -1,36 +1,30 @@
 package org.skypro.skyshop.articles;
 import org.skypro.skyshop.product.BestResultNotFound;
+import java.util.ArrayList;
+import java.util.List;
 public class SearchEngine {
-    private final Searchable[] items;
-    public SearchEngine(Searchable[] items) {
+    private final List<Searchable> items;
+    public SearchEngine(List<Searchable> items) {
         this.items = items;
     }
-    public Searchable findBestMatch(String search) throws BestResultNotFound {
+    public List<Searchable> findAllMatches(String search) throws BestResultNotFound {
         validateSearchTerm(search);
-        Searchable bestMatch = null;
-        int maxCount = 0;
+        List<Searchable> matches = new ArrayList<>();
 
         for (Searchable item : items) {
-            if (item != null) {
-                int count = countOccurrences(item.getSearchTerm(), search);
-                if (count > maxCount) {
-                    maxCount = count;
-                    bestMatch = item;
-                }
+            if (item != null && countOccurrences(item.getSearchTerm(), search) > 0) {
+                matches.add(item);
             }
         }
-        return getBestMatchResult(bestMatch, search);
+        if (matches.isEmpty()) {
+            throw new BestResultNotFound("Не найден подходящий товар: " + search);
+        }
+        return matches;
     }
     private void validateSearchTerm(String search) {
         if (search == null || search.isEmpty()) {
-            throw new IllegalArgumentException("Search term cannot be null or empty");
+            throw new IllegalArgumentException("Поисковый запрос не может быть пустым");
         }
-    }
-    private Searchable getBestMatchResult(Searchable bestMatch, String search) throws BestResultNotFound {
-        if (bestMatch == null) {
-            throw new BestResultNotFound("Не найден подходящий товар: " + search);
-        }
-        return bestMatch;
     }
     private int countOccurrences(String str, String substring) {
         int count = 0;
