@@ -1,20 +1,20 @@
 package org.skypro.skyshop.articles;
+import org.skypro.skyshop.SearchableComparator;
 import org.skypro.skyshop.product.BestResultNotFound;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
+import java.util.TreeSet;
 public class SearchEngine {
-    private final List<Searchable> items;
-    public SearchEngine(List<Searchable> items) {
+    private final Set<Searchable> items;
+    public SearchEngine(Set<Searchable> items) {
         this.items = items;
     }
-    public Map<String, Searchable> findAllMatches(String search) throws BestResultNotFound {
+    public Set<Searchable> findAllMatches(String search) throws BestResultNotFound {
         validateSearchTerm(search);
-        Map<String, Searchable> matches = new TreeMap<>();
+        Set<Searchable> matches = new TreeSet<>(new SearchableComparator());
 
         for (Searchable item : items) {
             if (item != null && countOccurrences(item.getSearchTerm(), search) > 0) {
-                matches.put(item.getSearchTerm(), item);
+                matches.add(item);
             }
         }
         if (matches.isEmpty()) {
