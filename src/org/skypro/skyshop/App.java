@@ -5,6 +5,7 @@ import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 public class App {
     public static void main(String[] args) {
 
@@ -15,18 +16,18 @@ public class App {
         List<Searchable> productList = Arrays.asList(apple, banana, pear);
         SearchEngine searchEngine = new SearchEngine(productList);
         try {
-            List<Searchable> matches = searchEngine.findAllMatches("Груша");
+            Map<String, Searchable> matches = searchEngine.findAllMatches("Груша");
             System.out.println("Найденные товары: " + matches.size());
+            for (Map.Entry<String, Searchable> entry : matches.entrySet()) {
+                System.out.println("Товар: " + entry.getKey());
+            }
 
             ProductBasket basket = new ProductBasket();
             basket.addProduct(apple);
             basket.addProduct(banana);
             basket.addProduct(pear);
-            // Удаляем существующий продукт
             removeProductFromBasket(basket, "Яблоко");
-            // Выводим содержимое корзины
             printBasketContents(basket);
-            // Удаляем несуществующий продукт
             removeProductFromBasket(basket, "Киви");
 
             printBasketContents(basket);
