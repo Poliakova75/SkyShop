@@ -21,16 +21,29 @@ public class ProductBasket {
         }
         return removedProducts;
     }
+    public int getTotalCost() {
+        return products.values().stream()
+                .flatMap(Set::stream)
+                .mapToInt(Product::getPrice)
+                .sum();
+    }
     public void printBasket() {
         if (products.isEmpty()) {
             System.out.println("Корзина пуста.");
         } else {
-            for (Map.Entry<String, Set<Product>> entry : products.entrySet()) {
-                Set<Product> productList = entry.getValue();
-                for (Product product : productList) {
-                    System.out.println(product.getName());
-                }
-            }
+            products.values().stream()
+                    .flatMap(Set::stream)
+                    .forEach(product -> System.out.println(product.getName()));
         }
+        int specialCount = (int) getSpecialCount();
+        System.out.println("Количество специальных продуктов: " + specialCount);
+    }
+    private long getSpecialCount() {
+        return products.values().stream()
+                .flatMap(Set::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 }
+
+

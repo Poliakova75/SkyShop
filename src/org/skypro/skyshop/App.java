@@ -46,6 +46,14 @@ public class App {
             basket.addProduct(banana);
             basket.addProduct(pear);
 
+            int totalCost = basket.getTotalCost();
+            System.out.println("Общая стоимость корзины: " + totalCost);
+
+
+            if (apple.isSpecial()) {
+                System.out.println(apple.getName() + " является специальным продуктом.");
+            }
+
             removeProductFromBasket(basket, "Яблоко");
             printBasketContents(basket);
             removeProductFromBasket(basket, "Киви");

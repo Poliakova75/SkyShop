@@ -4,18 +4,23 @@
     public abstract class Product implements Searchable {
         private final String name;
         private final String description;
-        public Product(String name, String description) {
+        private final boolean special;
+        public Product(String name, String description, boolean special) {
 
             if (name == null || name.isBlank()) {
                 throw new IllegalArgumentException("Название продукта не может быть пустым или состоять только из пробелов");
             }
             this.name = name;
             this.description = description;
+            this.special = special;
         }
         public String getName() {
             return name;
         }
         public abstract int getPrice();
+        public boolean isSpecial() {
+            return special;
+        }
         @Override
         public String getSearchTerm() {
             return name + ": " +  description;
@@ -26,7 +31,7 @@
         }
         @Override
         public String toString() {
-            return "Product{" + "name='" + name + '\'' + ", description='" + description + '\'' + '}';
+            return "Product{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", special=" + special + '}';
         }
         @Override
         public String getStringRepresentation() {

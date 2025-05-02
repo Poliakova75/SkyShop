@@ -3,7 +3,7 @@ public class FixPriceProduct extends Product {
     private static final int FIX_PRICE = 99;
     private final int price;
     public FixPriceProduct(String name, String description, int price) {
-        super(name, description);
+        super(name, description, false);
         this.price = price;
         if (this.price < 0) throw new IllegalArgumentException("Цена не может быть отрицательной");
     }

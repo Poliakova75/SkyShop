@@ -3,9 +3,8 @@ package org.skypro.skyshop.product;
 public class DiscountedProduct extends Product {
     private final int basePrice;
     private final int discountPercentage;
-
     public DiscountedProduct(String name, String description, int basePrice, int discountPercentage) {
-        super(name, description);
+        super(name, description, true);
         if (basePrice < 0) {
             throw new IllegalArgumentException("Цена не может быть отрицательной.");
         }
